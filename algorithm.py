@@ -1,9 +1,11 @@
 
 import pandas as pd
 import matplotlib.pyplot as plt
+from sklearn.model_selection import GridSearchCV
+
 
 #CREATE DATA FRAME
-fruits = pd.read_table("/Users/Arman/Desktop/programmingProjects/fruitClassification/fruit_data.txt")
+fruits = pd.read_table("fruit_data.txt")
 print(fruits.head())
 
 print(fruits.shape)
@@ -61,8 +63,12 @@ print(f"DECISION TREE accuracy on TESTING data: {clf.score(X_test, y_test)}")
 
 #KNN CLASSIFIER
 from sklearn.neighbors import KNeighborsClassifier
-knn = KNeighborsClassifier()
+base_knn = KNeighborsClassifier()
+parameters = {'n_neighbors': [1 + 2**x for x in range(5)], 'weights': ['distance']}
+
+knn = GridSearchCV(base_knn, parameters, cv=3)
 knn.fit(X_train, y_train)
+print('Best Hyperparameters: ', knn.best_params_, '\n')
 
 print(f"KNN accuracy on TRAINING data: {knn.score(X_train, y_train)}")
 print(f"KNN accuracy on TESTING data: {knn.score(X_test, y_test)}")
